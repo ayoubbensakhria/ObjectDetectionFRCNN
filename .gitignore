@@ -1,0 +1,6 @@
+# ignore Dataset directories since it will be downloaded from Kaggle
+faster_rcnn_resnet101/Birds/*
+faster_rcnn_resnet101/models/*
+faster_rcnn_resnet101/training/*
+faster_rcnn_resnet101/fasterrcnn_inference_graph/*
+faster_rcnn_resnet101/faster_rcnn_resnet101_v1_640x640_coco17_tpu-8/*
