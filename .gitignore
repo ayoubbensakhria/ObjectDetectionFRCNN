@@ -20,5 +20,5 @@ ssd_inception_v2/faster_rcnn_resnet101_v1_640x640_coco17_tpu-8/*
 ssd_resnet101/Birds/*
 ssd_resnet101/models/*
 ssd_resnet101/training/*
-ssd_resnet101/fasterrcnn_inference_graph/*
-ssd_resnet101/faster_rcnn_resnet101_v1_640x640_coco17_tpu-8/*
+ssd_resnet101/ssd_inference_graph/*
+ssd_resnet101/ssd_resnet101_v1_fpn_640x640_coco17_tpu-8/*
