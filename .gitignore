@@ -2,13 +2,18 @@
 faster_rcnn_resnet101/Birds/*
 faster_rcnn_resnet101/models/*
 faster_rcnn_resnet101/training/*
+faster_rcnn_resnet101/training_ssd/*
 faster_rcnn_resnet101/fasterrcnn_inference_graph/*
+faster_rcnn_resnet101/ssd_inference_graph/*
 faster_rcnn_resnet101/faster_rcnn_resnet101_v1_640x640_coco17_tpu-8/*
+faster_rcnn_resnet101/ssd_resnet101_v1_fpn_640x640_coco17_tpu-8/*
 
 faster_rcnn_inception_v2/Birds/*
 faster_rcnn_inception_v2/models/*
 faster_rcnn_inception_v2/training/*
+faster_rcnn_inception_v2/training_ssd/*
 faster_rcnn_inception_v2/fasterrcnn_inference_graph/*
+faster_rcnn_inception_v2/ssd_inference_graph/*
 faster_rcnn_inception_v2/faster_rcnn_resnet101_v1_640x640_coco17_tpu-8/*
 
 ssd_inception_v2/Birds/*
