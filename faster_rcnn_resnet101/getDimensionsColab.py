@@ -24,7 +24,7 @@ def get_dimensions(path, extension="jpg"):
             # get current folder
             current_folder = os.path.basename(os.path.dirname(jpg_file))
             # Exclude train, test, valid
-            if current_folder in ['train', 'test', 'valid']:
+            if current_folder in ['test', 'valid']:
                 continue
             img = imread(jpg_file)
             # check if xml with the same filename exists
