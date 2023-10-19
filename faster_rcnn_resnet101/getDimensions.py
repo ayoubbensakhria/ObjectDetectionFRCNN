@@ -24,7 +24,7 @@ def get_dimensions(path, extension="jpg"):
             else:
                 annotation_count[current_class] = 1
         except Exception as e:
-            print(f'An error occurred with the file: {xml_file}. Error: {e}')
+            # just continue
             continue
 
     print(hw_pairs)
