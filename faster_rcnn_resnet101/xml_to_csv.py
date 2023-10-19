@@ -32,6 +32,7 @@ def xml_to_csv(path):
         tree = ET.parse(xml_file)
         root = tree.getroot()
         for member in root.findall('object'):
+            # skip if member is not defined
             if not member or not member[4]:
                 continue
             value = (root.find('filename').text,
