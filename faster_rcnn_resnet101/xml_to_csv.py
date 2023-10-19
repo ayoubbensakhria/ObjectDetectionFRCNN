@@ -1,11 +1,12 @@
 import os
 import glob
+import argparse
 import pandas as pd
 import xml.etree.ElementTree as ET
 
 def xml_to_csv(xml_folder):
     xml_list = []
-    for xml_file in glob.glob(xml_folder + '/*.xml'):
+    for xml_file in glob.glob(os.path.join(xml_folder, '*.xml')):
         tree = ET.parse(xml_file)
         root = tree.getroot()
         for obj in root.findall('object'):
@@ -20,33 +21,13 @@ def xml_to_csv(xml_folder):
     xml_df = pd.DataFrame(xml_list, columns=column_names)
     return xml_df
 
-
-def main():
-    # Initiate argument parser
-    parser = argparse.ArgumentParser(
-        description="Sample TensorFlow XML-to-CSV converter")
-    parser.add_argument("-i",
-                        "--inputDir",
-                        help="Path to the folder where the input .xml files are stored",
-                        type=str)
-    parser.add_argument("-o",
-                        "--outputFile",
-                        help="Name of output .csv file (including path)", type=str)
-    args = parser.parse_args()
-
-    if(args.inputDir is None):
-        args.inputDir = os.getcwd()
-    if(args.outputFile is None):
-        args.outputFile = args.inputDir + "/labels.csv"
-
-    assert(os.path.isdir(args.inputDir))
-
-    xml_df = xml_to_csv(args.inputDir)
-    xml_df.to_csv(
-        args.outputFile, index=None)
-    print('Successfully converted xml to csv.')
-
+def main(xml_folder, output_csv):
+    xml_df = xml_to_csv(xml_folder)
+    xml_df.to_csv(output_csv, index=None)
 
 if __name__ == '__main__':
-    main()
-
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--xml_folder', required=True, help='Path to XML folder')
+    parser.add_argument('--output_csv', required=True, help='Output CSV file path')
+    args = parser.parse_args()
+    main(args.xml_folder, args.output_csv)
