@@ -24,7 +24,7 @@ def get_dimensions(path, extension="jpg"):
             else:
                 annotation_count[current_class] = 1
         except Exception as e:
-            # just continue
+            # just continue without printing any error
             continue
 
     print(hw_pairs)
