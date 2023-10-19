@@ -16,6 +16,9 @@ def get_dimensions(path, extension="jpg"):
             hw_pairs.append((height, width))
             
             current_class = root.find('.//object/name').text
+            # continue if there is no class attributed
+            if current_class is None:
+                continue
             if current_class in annotation_count:
                 annotation_count[current_class] += 1
             else:
