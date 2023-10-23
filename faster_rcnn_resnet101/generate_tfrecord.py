@@ -28,7 +28,7 @@ def class_text_to_int(row_label):
     return class_mapping.get(row_label, None)
 
 def create_tf_example(group, path):
-    file_name = str(group.filename.iloc[0]) + ".jpg"  # Ensure file_name is a string
+    file_name = str(group.filename.iloc[0]) # Ensure file_name is a string
     file_path = os.path.join(path, file_name)
 
     with tf.io.gfile.GFile(file_path, 'rb') as fid:
