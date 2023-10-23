@@ -7,56 +7,47 @@ Usage:
   # Create test data: 
   python generate_tfrecord.py --csv_input=images/test_labels.csv  --image_dir=images/test --output_path=test.record
 """
-from __future__ import division
-from __future__ import print_function
-from __future__ import absolute_import
 
 import os
 import io
 import pandas as pd
 import tensorflow as tf
-
 from PIL import Image
 from object_detection.utils import dataset_util
-from collections import namedtuple, OrderedDict
+from collections import namedtuple
 
 flags = tf.compat.v1.flags
-flags.DEFINE_string('csv_input', '', 'Path to the CSV input')
-flags.DEFINE_string('image_dir', '', 'Path to the image directory')
-flags.DEFINE_string('output_path', '', 'Path to output TFRecord')
 FLAGS = flags.FLAGS
 
+class_mapping = {
+    "indian_robinrotation": 1,
+    "oriental_magpie_robinrotation": 2,
+    "alexandrine_parakeetrotation": 3,
+    "asian_koelrotation": 4,
+    "indian_paradise-flycatcherrotation": 5,
+    "laughing_doverotation": 6,
+    "indian_spot-billed_duckrotation": 7,
+    "asian_wooly-necked_storkrotation": 8,
+    "bulbulrotation": 9,
+    "barn_owlrotation": 10,
+    "woodpeakerrotation": 11,
+    "yellow_breasted_greenfinchrotation": 12,
+    "red_bearded_bea_eaterrotation": 13,
+    "wrenrotation": 14,
+    "black_kiterotation": 15,
+    "brahminy_kiterotation": 16
+}
 
 def class_text_to_int(row_label):
-    class_mapping = {
-        "indian_robinrotation": 1,
-        "oriental_magpie_robinrotation": 2,
-        "alexandrine_parakeetrotation": 3,
-        "asian_koelrotation": 4,
-        "indian_paradise-flycatcherrotation": 5,
-        "laughing_doverotation": 6,
-        "indian_spot-billed_duckrotation": 7,
-        "asian_wooly-necked_storkrotation": 8,
-        "bulbulrotation": 9,
-        "barn_owlrotation": 10,
-        "woodpeakerrotation": 11,
-        "yellow_breasted_greenfinchrotation": 12,
-        "red_bearded_bea_eaterrotation": 13,
-        "wrenrotation": 14,
-        "black_kiterotation": 15,
-        "brahminy_kiterotation": 16
-    }
     return class_mapping.get(row_label, None)
-
 
 def split(df, group):
     data = namedtuple('data', ['filename', 'object'])
     gb = df.groupby(group)
     return [data(filename, gb.get_group(x)) for filename, x in zip(gb.groups.keys(), gb.groups)]
 
-
 def create_tf_example(group, path):
-    with tf.gfile.GFile(os.path.join(path, '{}'.format(group.filename)), 'rb') as fid:
+    with tf.io.gfile.GFile(os.path.join(path, '{}'.format(group.filename)), 'rb') as fid:
         encoded_jpg = fid.read()
     encoded_jpg_io = io.BytesIO(encoded_jpg)
     image = Image.open(encoded_jpg_io)
@@ -95,9 +86,8 @@ def create_tf_example(group, path):
     }))
     return tf_example
 
-
 def main(_):
-    writer = tf.python_io.TFRecordWriter(FLAGS.output_path)
+    writer = tf.io.TFRecordWriter(FLAGS.output_path)
     path = os.path.join(os.getcwd(), FLAGS.image_dir)
     examples = pd.read_csv(FLAGS.csv_input)
     grouped = split(examples, 'filename')
@@ -108,7 +98,6 @@ def main(_):
     writer.close()
     output_path = os.path.join(os.getcwd(), FLAGS.output_path)
     print('Successfully created the TFRecords: {}'.format(output_path))
-
 
 if __name__ == '__main__':
     tf.compat.v1.app.run()
