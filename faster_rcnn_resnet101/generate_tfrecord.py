@@ -15,21 +15,22 @@ def class_text_to_int(row_label):
         raise ValueError(f'Unknown label: {row_label}')
 
 def create_tf_example(group, path):
-    print('File Path', os.path.join(path, '{}'.format(group.filename)))
-    if os.path.exists(os.path.join(path, '{}'.format(group.filename))):  # Added missing closing parenthesis here
-        with tf.io.gfile.GFile(os.path.join(path, '{}'.format(group.filename)), 'rb') as fid:
+    file_name = os.path.basename(group.filename)  # Extract the base name from the full path
+    file_path = os.path.join(path, file_name)  # Construct the correct file path
+    if os.path.exists(file_path):
+        with tf.io.gfile.GFile(file_path, 'rb') as fid:
             encoded_jpg = fid.read()
         encoded_jpg_io = io.BytesIO(encoded_jpg)
         image = Image.open(encoded_jpg_io)
         width, height = image.size
 
-        filename = group.filename.encode('utf8')
+        filename = file_name.encode('utf8')  # Use the extracted file name
         image_format = b'jpg'
         xmins = [group.xmin / width]
         xmaxs = [group.xmax / width]
         ymins = [group.ymin / height]
         ymaxs = [group.ymax / height]
-        classes_text = group['class'].encode('utf8')  # Use group['class'] instead of group.class
+        classes_text = group['class'].encode('utf8')
         classes = class_text_to_int(group['class'])
 
         tf_example = tf.train.Example(features=tf.train.Features(feature={
