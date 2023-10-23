@@ -15,7 +15,7 @@ def class_text_to_int(row_label):
         raise ValueError(f'Unknown label: {row_label}')
 
 def create_tf_example(group, path):
-    file_name = os.path.basename(group.filename.astype(str))  # Convert to string before extracting the base name
+    file_name = ''.join(group.filename.astype(str))
     file_path = os.path.join(path, file_name)  # Construct the correct file path
     if os.path.exists(file_path):
         with tf.io.gfile.GFile(file_path, 'rb') as fid:
