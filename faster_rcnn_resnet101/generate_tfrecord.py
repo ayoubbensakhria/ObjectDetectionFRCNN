@@ -15,7 +15,7 @@ def class_text_to_int(row_label):
         raise ValueError(f'Unknown label: {row_label}')
 
 def create_tf_example(group, path):
-    print(os.path.join(path, '{}'.format(group.filename)))
+    print('File Path', os.path.join(path, '{}'.format(group.filename)))
     if os.path.exists(os.path.join(path, '{}'.format(group.filename))):  # Added missing closing parenthesis here
         with tf.io.gfile.GFile(os.path.join(path, '{}'.format(group.filename)), 'rb') as fid:
             encoded_jpg = fid.read()
