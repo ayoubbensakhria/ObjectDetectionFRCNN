@@ -9,6 +9,7 @@ def xml_to_csv(xml_folder):
     for xml_file in glob.glob(os.path.join(xml_folder, '*.xml')):
         tree = ET.parse(xml_file)
         root = tree.getroot()
+        jpg_filename = root.find('filename').text
         for obj in root.findall('object'):
             obj_name = obj.find('name').text
             xmlbox = obj.find('bndbox')
@@ -16,7 +17,7 @@ def xml_to_csv(xml_folder):
             ymin = int(xmlbox.find('ymin').text)
             xmax = int(xmlbox.find('xmax').text)
             ymax = int(xmlbox.find('ymax').text)
-            xml_list.append([os.path.basename(xml_file), xmin, ymin, xmax, ymax, obj_name])
+            xml_list.append([jpg_filename, xmin, ymin, xmax, ymax, obj_name])
     column_names = ['filename', 'xmin', 'ymin', 'xmax', 'ymax', 'class']
     xml_df = pd.DataFrame(xml_list, columns=column_names)
     return xml_df
