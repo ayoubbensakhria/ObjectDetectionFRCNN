@@ -31,43 +31,25 @@ flags.DEFINE_string('image_dir', '', 'Path to the image directory')
 flags.DEFINE_string('output_path', '', 'Path to output TFRecord')
 FLAGS = flags.FLAGS
 
+def class_dict_from_pbtxt(pbtxt_path):
+   with open(pbtxt_path, 'r', encoding='utf-8-sig') as f:
+      data = f.readlines()
 
-def class_text_to_int(row_label):
-    if row_label == 'indian_robinrotation':
-        return 1
-    elif row_label == 'oriental_magpie_robinrotation':
-        return 2
-    elif row_label == 'alexandrine_parakeetrotation':
-        return 3
-    elif row_label == 'asian_koelrotation':
-        return 4
-    elif row_label == 'indian_paradise-flycatcherrotation':
-        return 5
-    elif row_label == 'laughing_doverotation':
-        return 6
-    elif row_label == 'indian_spot-billed_duckrotation':
-        return 7
-    elif row_label == 'asian_wooly-necked_storkrotation':
-        return 8
-    elif row_label == 'bulbulrotation':
-        return 9
-    elif row_label == 'barn_owlrotation':
-        return 10
-    elif row_label == 'woodpeakerrotation':
-        return 11
-    elif row_label == 'yellow_breasted_greenfinchrotation':
-        return 12
-    elif row_label == 'red_bearded_bea_eaterrotation':
-        return 13
-    elif row_label == 'wrenrotation':
-        return 14
-    elif row_label == 'black_kiterotation':
-        return 15
-    elif row_label == 'brahminy_kiterotation':
-        return 16
-    else:
-        None
+   data = [l.rstrip('\n').strip() for l in data if 'id:' in l or 'display_name:' in l]
 
+   ids = [int(l.replace('id:', '')) for l in data if l.startswith('id')]
+   display_names = [l.replace('display_name:', '').replace('"', '').strip() for l in data if l.startswith('display_name:')]
+
+   class_dict = {display_names[i]: ids[i] for i in range(len(ids))}
+
+   return class_dict
+
+
+def class_text_to_int(row_label, class_dict):
+    return class_dict.get(row_label)
+
+# Load class_dict
+class_dict = class_dict_from_pbtxt("label_map.pbtxt")
 
 def split(df, group):
     data = namedtuple('data', ['filename', 'object'])
@@ -97,7 +79,7 @@ def create_tf_example(group, path):
         ymins.append(row['ymin'] / height)
         ymaxs.append(row['ymax'] / height)
         classes_text.append(row['class'].encode('utf8'))
-        classes.append(class_text_to_int(row['class']))
+        classes.append(class_text_to_int(row['class'], class_dict))
 
     tf_example = tf.train.Example(features=tf.train.Features(feature={
         'image/height': dataset_util.int64_feature(height),
